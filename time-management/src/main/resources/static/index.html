@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeMaster - Quản Lý Thời Gian Cá Nhân</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>TimeMaster</span>
+                </div>
+                <button class="btn-icon sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Tổng Quan</span>
+                </a>
+                <a href="#tasks" class="nav-item" data-section="tasks">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <span>Công Việc</span>
+                    <span class="nav-badge" id="navTaskCount">0</span>
+                </a>
+                <a href="#calendar" class="nav-item" data-section="calendar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Lịch & Lịch Trình</span>
+                </a>
+                <a href="#categories" class="nav-item" data-section="categories">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                    </svg>
+                    <span>Danh Mục</span>
+                    <span class="nav-badge" id="navCategoryCount">0</span>
+                </a>
+                <a href="#reminders" class="nav-item" data-section="reminders">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span>Nhắc Nhở</span>
+                    <span class="nav-badge alert-badge" id="navReminderCount">0</span>
+                </a>
+                <a href="#progress" class="nav-item" data-section="progress">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span>Tiến Độ & Thống Kê</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-mini-progress">
+                    <div class="mini-progress-info">
+                        <span>Tiến độ tổng</span>
+                        <strong id="sidebarProgressPercent">0%</strong>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="sidebarProgressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="sidebar-sys-status">
+                    <span class="status-indicator online"></span>
+                    <span>Spring Boot API: Sẵn sàng</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <!-- Header Bar -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="header-page-title" id="pageTitle">Tổng Quan</h1>
+                        <p class="header-subtitle" id="pageSubtitle">Quản lý hiệu quả thời gian và công việc mỗi ngày</p>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="live-clock-badge" id="liveClockBadge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span id="liveClock">00:00:00</span>
+                    </div>
+
+                    <button class="btn btn-secondary btn-icon-text" id="refreshDataBtn" title="Làm mới dữ liệu từ server">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        <span>Làm mới</span>
+                    </button>
+
+                    <button class="btn btn-primary btn-icon-text" id="headerQuickAddBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Thêm công việc</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Sections -->
+            <main class="content-container">
+
+                <!-- 1. DASHBOARD SECTION -->
+                <section class="page-section active" id="section-dashboard">
+                    <!-- Metric Cards -->
+                    <div class="metric-grid">
+                        <div class="metric-card metric-primary">
+                            <div class="metric-icon-box">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Tổng Công Việc</span>
+                                <h3 class="metric-value" id="dashTotalTasks">0</h3>
+                                <span class="metric-trend text-muted">Toàn bộ kế hoạch</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card metric-success">
+                            <div class="metric-icon-box">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Đã Hoàn Thành</span>
+                                <h3 class="metric-value" id="dashCompletedTasks">0</h3>
+                                <span class="metric-trend text-success" id="dashCompletedRate">0% tiến độ</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card metric-warning">
+                            <div class="metric-icon-box">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 14 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Chưa Hoàn Thành</span>
+                                <h3 class="metric-value" id="dashIncompleteTasks">0</h3>
+                                <span class="metric-trend text-warning">Cần tập trung xử lý</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card metric-info">
+                            <div class="metric-icon-box">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                            <div class="metric-content">
+                                <span class="metric-label">Hôm Nay</span>
+                                <h3 class="metric-value" id="dashTodayTasks">0</h3>
+                                <span class="metric-trend text-info" id="dashUpcomingCount">0 việc sắp tới</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Charts & Analytics Row -->
+                    <div class="dashboard-analytics-row">
+                        <!-- Progress Gauge Card -->
+                        <div class="card analytics-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Tiến Độ Tổng Thể</h2>
+                                <span class="badge badge-info" id="dashProgressBadge">0% Đạt</span>
+                            </div>
+                            <div class="card-body gauge-container">
+                                <div class="circular-progress-wrap">
+                                    <svg class="progress-ring" width="160" height="160">
+                                        <circle class="progress-ring-bg" stroke-width="12" cx="80" cy="80" r="66" />
+                                        <circle class="progress-ring-fill" id="dashCircularProgress" stroke-width="12" cx="80" cy="80" r="66" stroke-dasharray="414.69" stroke-dashoffset="414.69" />
+                                    </svg>
+                                    <div class="progress-ring-text">
+                                        <span class="ring-value" id="dashRingPercent">0%</span>
+                                        <span class="ring-label">Hoàn thành</span>
+                                    </div>
+                                </div>
+                                <div class="gauge-stats-details">
+                                    <div class="gauge-stat-item">
+                                        <div class="dot bg-success"></div>
+                                        <span>Đã làm xong:</span>
+                                        <strong id="dashGaugeDone">0</strong>
+                                    </div>
+                                    <div class="gauge-stat-item">
+                                        <div class="dot bg-warning"></div>
+                                        <span>Đang thực hiện:</span>
+                                        <strong id="dashGaugeDoing">0</strong>
+                                    </div>
+                                    <div class="gauge-stat-item">
+                                        <div class="dot bg-danger"></div>
+                                        <span>Chưa bắt đầu:</span>
+                                        <strong id="dashGaugeTodo">0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category Breakdown Card -->
+                        <div class="card analytics-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Phân Bố Theo Danh Mục</h2>
+                                <button class="btn-text" id="dashGoCategoriesBtn">Xem tất cả &rarr;</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="category-bars-list" id="dashCategoryBars">
+                                    <!-- Dynamic bars rendered via JS -->
+                                    <div class="empty-state-mini">Chưa có danh mục nào</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2 Columns: Today's Tasks & Upcoming Tasks / Reminders -->
+                    <div class="dashboard-two-cols">
+                        <!-- Today Tasks -->
+                        <div class="card dashboard-list-card">
+                            <div class="card-header">
+                                <div class="card-header-left">
+                                    <h2 class="card-title">Công Việc Hôm Nay</h2>
+                                    <span class="badge badge-primary" id="dashTodayBadge">0 việc</span>
+                                </div>
+                                <button class="btn btn-sm btn-outline" id="dashAddTodayTaskBtn">+ Thêm cho hôm nay</button>
+                            </div>
+                            <div class="card-body list-body" id="dashTodayTasksList">
+                                <!-- Dynamic items via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Upcoming Tasks & Reminders -->
+                        <div class="card dashboard-list-card">
+                            <div class="card-header">
+                                <div class="card-header-left">
+                                    <h2 class="card-title">Sắp Tới & Nhắc Nhở</h2>
+                                    <span class="badge badge-warning" id="dashUpcomingBadge">0 mục</span>
+                                </div>
+                                <button class="btn btn-sm btn-outline" id="dashAddReminderBtn">+ Tạo nhắc nhở</button>
+                            </div>
+                            <div class="card-body list-body" id="dashUpcomingList">
+                                <!-- Dynamic items via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. TASK MANAGEMENT SECTION -->
+                <section class="page-section" id="section-tasks">
+                    <!-- Tasks Controls Toolbar -->
+                    <div class="tasks-toolbar card">
+                        <div class="toolbar-search">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="taskSearchInput" placeholder="Tìm kiếm theo tiêu đề hoặc mô tả..." autocomplete="off">
+                            <button class="clear-search-btn" id="taskClearSearchBtn" style="display:none;">&times;</button>
+                        </div>
+
+                        <div class="toolbar-filters">
+                            <div class="filter-group">
+                                <label for="taskFilterCategory">Danh mục:</label>
+                                <select id="taskFilterCategory" class="form-select">
+                                    <option value="ALL">Tất cả danh mục</option>
+                                    <!-- Dynamic options -->
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="taskFilterStatus">Trạng thái:</label>
+                                <select id="taskFilterStatus" class="form-select">
+                                    <option value="ALL">Tất cả trạng thái</option>
+                                    <option value="COMPLETED">Đã hoàn thành</option>
+                                    <option value="IN_PROGRESS">Đang làm</option>
+                                    <option value="TODO">Chưa hoàn thành</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="taskFilterDate">Thời gian:</label>
+                                <select id="taskFilterDate" class="form-select">
+                                    <option value="ALL">Tất cả ngày</option>
+                                    <option value="TODAY">Hôm nay</option>
+                                    <option value="UPCOMING">Sắp tới</option>
+                                    <option value="OVERDUE">Quá hạn</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary btn-icon-text" id="tasksAddNewBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span>Thêm Công Việc</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tasks List / Grid Container -->
+                    <div class="tasks-container" id="tasksListContainer">
+                        <!-- Dynamic task cards/items will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- 3. CALENDAR & SCHEDULE SECTION -->
+                <section class="page-section" id="section-calendar">
+                    <div class="calendar-layout">
+                        <!-- Left / Main: Month Calendar Grid -->
+                        <div class="calendar-card card">
+                            <div class="calendar-header">
+                                <div class="calendar-nav-controls">
+                                    <button class="btn-icon" id="calPrevMonthBtn" title="Tháng trước">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <h2 class="calendar-current-title" id="calCurrentMonthTitle">Tháng 10, 2026</h2>
+                                    <button class="btn-icon" id="calNextMonthBtn" title="Tháng sau">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" id="calTodayJumpBtn">Hôm nay</button>
+                                </div>
+
+                                <div class="calendar-header-actions">
+                                    <button class="btn btn-primary btn-icon-text" id="calAddScheduleBtn">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                        <span>Tạo Lịch Trình</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Calendar Grid -->
+                            <div class="calendar-weekdays">
+                                <div class="weekday">T2</div>
+                                <div class="weekday">T3</div>
+                                <div class="weekday">T4</div>
+                                <div class="weekday">T5</div>
+                                <div class="weekday">T6</div>
+                                <div class="weekday weekend">T7</div>
+                                <div class="weekday weekend">CN</div>
+                            </div>
+                            <div class="calendar-days-grid" id="calendarDaysGrid">
+                                <!-- Days cells generated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Selected Day Schedules & Tasks -->
+                        <div class="day-details-panel card">
+                            <div class="card-header">
+                                <div>
+                                    <span class="text-muted text-sm">Chi tiết ngày</span>
+                                    <h3 class="card-title" id="selectedDateTitle">05/10/2026</h3>
+                                </div>
+                                <button class="btn btn-sm btn-primary" id="dayPanelAddScheduleBtn">+ Thêm</button>
+                            </div>
+                            <div class="card-body" id="selectedDayItemsContainer">
+                                <!-- Dynamic day items -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. CATEGORY MANAGEMENT SECTION -->
+                <section class="page-section" id="section-categories">
+                    <div class="section-top-bar">
+                        <div>
+                            <h2 class="section-title">Quản Lý Danh Mục</h2>
+                            <p class="section-desc">Phân loại công việc để quản lý khoa học và hiệu quả hơn</p>
+                        </div>
+                        <button class="btn btn-primary btn-icon-text" id="categoryAddNewBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>Thêm Danh Mục</span>
+                        </button>
+                    </div>
+
+                    <div class="categories-grid" id="categoriesGridContainer">
+                        <!-- Dynamic category cards -->
+                    </div>
+                </section>
+
+                <!-- 5. REMINDER MANAGEMENT SECTION -->
+                <section class="page-section" id="section-reminders">
+                    <div class="section-top-bar">
+                        <div>
+                            <h2 class="section-title">Nhắc Nhở Công Việc</h2>
+                            <p class="section-desc">Không bao giờ bỏ lỡ deadline hay các mốc thời gian quan trọng</p>
+                        </div>
+                        <div class="top-bar-actions">
+                            <select id="reminderFilterStatus" class="form-select form-select-sm">
+                                <option value="ALL">Tất cả trạng thái</option>
+                                <option value="ACTIVE">Đang bật</option>
+                                <option value="DISABLED">Đã hủy/tắt</option>
+                            </select>
+                            <button class="btn btn-primary btn-icon-text" id="reminderAddNewBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span>Thêm Nhắc Nhở</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="reminders-grid" id="remindersGridContainer">
+                        <!-- Dynamic reminder cards -->
+                    </div>
+                </section>
+
+                <!-- 6. PROGRESS & STATISTICS SECTION -->
+                <section class="page-section" id="section-progress">
+                    <div class="section-top-bar">
+                        <div>
+                            <h2 class="section-title">Tiến Độ & Thống Kê</h2>
+                            <p class="section-desc">Theo dõi tỉ mỉ tỷ lệ hoàn thành từng công việc và hiệu suất tổng thể</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Statistics Overview -->
+                    <div class="progress-overview-card card">
+                        <div class="progress-stats-header">
+                            <div>
+                                <span class="text-muted">Tổng tỷ lệ hoàn thành dự án</span>
+                                <h2 class="big-progress-percent" id="progOverviewPercent">0%</h2>
+                            </div>
+                            <div class="progress-counter-badges">
+                                <div class="badge-box">
+                                    <span>Tổng số việc:</span>
+                                    <strong id="progStatTotal">0</strong>
+                                </div>
+                                <div class="badge-box text-success">
+                                    <span>Hoàn thành:</span>
+                                    <strong id="progStatCompleted">0</strong>
+                                </div>
+                                <div class="badge-box text-warning">
+                                    <span>Đang tiến hành / Chưa xong:</span>
+                                    <strong id="progStatIncomplete">0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="big-progress-bar-container">
+                            <div class="big-progress-bar-fill" id="progOverviewBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Task Progress Table -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Tiến Độ Từng Công Việc</h3>
+                            <span class="text-muted text-sm">Cập nhật trực tiếp trạng thái &amp; % tiến độ</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="progressTable">
+                                <thead>
+                                    <tr>
+                                        <th>Công Việc</th>
+                                        <th>Danh Mục</th>
+                                        <th>Hạn Định</th>
+                                        <th>Trạng Thái</th>
+                                        <th style="width: 250px;">Tiến Độ (%)</th>
+                                        <th style="width: 140px; text-align: center;">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="progressTableBody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- 1. Task Modal (Add / Edit) -->
+    <div class="modal-backdrop" id="taskModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="taskModalTitle">Thêm Công Việc Mới</h3>
+                <button class="modal-close-btn" data-close-modal="taskModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskFormId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="taskFormTitle" class="form-label required">Tiêu đề công việc</label>
+                        <input type="text" id="taskFormTitle" class="form-control" placeholder="Ví dụ: Hoàn thành báo cáo đồ án Java" required maxlength="255">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="taskFormDate" class="form-label required">Ngày thực hiện</label>
+                            <input type="date" id="taskFormDate" class="form-control" required>
+                        </div>
+                        <div class="form-group col">
+                            <label for="taskFormTime" class="form-label required">Thời gian</label>
+                            <input type="time" id="taskFormTime" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskFormCategory" class="form-label">Danh mục</label>
+                        <select id="taskFormCategory" class="form-control">
+                            <option value="">-- Không chọn danh mục --</option>
+                            <!-- Dynamic category list -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskFormDescription" class="form-label">Mô tả chi tiết</label>
+                        <textarea id="taskFormDescription" class="form-control" rows="3" placeholder="Ghi chú các việc cần chuẩn bị..."></textarea>
+                    </div>
+
+                    <!-- Option to also create schedule & reminder if adding new task -->
+                    <div class="form-checkbox-group" id="taskExtraOptions">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="taskAutoSchedule">
+                            <span class="checkbox-indicator"></span>
+                            <span>Tự động thêm vào Lịch trình của ngày này</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal="taskModal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary" id="taskFormSubmitBtn">Lưu công việc</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Task Details Modal -->
+    <div class="modal-backdrop" id="taskDetailModal">
+        <div class="modal-dialog modal-dialog-lg">
+            <div class="modal-header">
+                <h3 class="modal-title">Chi Tiết Công Việc</h3>
+                <button class="modal-close-btn" data-close-modal="taskDetailModal">&times;</button>
+            </div>
+            <div class="modal-body" id="taskDetailContent">
+                <!-- Dynamically loaded -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close-modal="taskDetailModal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="taskDetailEditBtn">Chỉnh sửa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Category Modal (Add / Edit) -->
+    <div class="modal-backdrop" id="categoryModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="categoryModalTitle">Thêm Danh Mục Mới</h3>
+                <button class="modal-close-btn" data-close-modal="categoryModal">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <input type="hidden" id="categoryFormId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="categoryFormName" class="form-label required">Tên danh mục</label>
+                        <input type="text" id="categoryFormName" class="form-control" placeholder="Ví dụ: Học tập, Công việc, Sức khỏe..." required maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryFormDescription" class="form-label">Mô tả danh mục</label>
+                        <textarea id="categoryFormDescription" class="form-control" rows="3" placeholder="Mô tả mục đích của danh mục này..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal="categoryModal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary">Lưu danh mục</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Schedule Modal (Add / Edit) -->
+    <div class="modal-backdrop" id="scheduleModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="scheduleModalTitle">Thêm Vào Lịch Trình</h3>
+                <button class="modal-close-btn" data-close-modal="scheduleModal">&times;</button>
+            </div>
+            <form id="scheduleForm">
+                <input type="hidden" id="scheduleFormId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="scheduleFormTask" class="form-label required">Chọn công việc</label>
+                        <select id="scheduleFormTask" class="form-control" required>
+                            <option value="">-- Chọn công việc --</option>
+                            <!-- Dynamic task options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleFormDate" class="form-label required">Ngày xếp lịch</label>
+                        <input type="date" id="scheduleFormDate" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal="scheduleModal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary">Lưu lịch trình</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Reminder Modal (Add / Edit) -->
+    <div class="modal-backdrop" id="reminderModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="reminderModalTitle">Tạo Nhắc Nhở</h3>
+                <button class="modal-close-btn" data-close-modal="reminderModal">&times;</button>
+            </div>
+            <form id="reminderForm">
+                <input type="hidden" id="reminderFormId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reminderFormTask" class="form-label required">Công việc cần nhắc</label>
+                        <select id="reminderFormTask" class="form-control" required>
+                            <option value="">-- Chọn công việc --</option>
+                            <!-- Dynamic task options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminderFormTime" class="form-label required">Thời điểm nhắc nhở</label>
+                        <input type="datetime-local" id="reminderFormTime" class="form-control" required>
+                    </div>
+                    <div class="form-checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="reminderFormEnabled" checked>
+                            <span class="checkbox-indicator"></span>
+                            <span>Kích hoạt nhắc nhở ngay</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal="reminderModal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary">Lưu nhắc nhở</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Progress Modal (Edit Status / Percentage) -->
+    <div class="modal-backdrop" id="progressModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Cập Nhật Tiến Độ Công Việc</h3>
+                <button class="modal-close-btn" data-close-modal="progressModal">&times;</button>
+            </div>
+            <form id="progressForm">
+                <input type="hidden" id="progressFormId">
+                <input type="hidden" id="progressFormTaskId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Tên công việc:</label>
+                        <p class="font-bold" id="progressFormTaskTitle">-</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="progressFormStatus" class="form-label required">Trạng thái</label>
+                        <select id="progressFormStatus" class="form-control" required>
+                            <option value="TODO">Chưa thực hiện (TODO)</option>
+                            <option value="IN_PROGRESS">Đang thực hiện (IN_PROGRESS)</option>
+                            <option value="COMPLETED">Đã hoàn thành (COMPLETED)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="progressFormPercent" class="form-label">
+                            Tiến độ (%): <strong id="progressFormPercentDisplay">50%</strong>
+                        </label>
+                        <input type="range" id="progressFormPercent" class="form-range" min="0" max="100" step="5" value="50">
+                    </div>
+                    <div class="form-checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="progressFormCompleted">
+                            <span class="checkbox-indicator"></span>
+                            <span>Đánh dấu hoàn thành toàn bộ (100%)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal="progressModal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu tiến độ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. Confirm Dialog Modal -->
+    <div class="modal-backdrop" id="confirmModal">
+        <div class="modal-dialog modal-dialog-sm">
+            <div class="modal-header">
+                <h3 class="modal-title text-danger" id="confirmModalTitle">Xác Nhận Xóa</h3>
+                <button class="modal-close-btn" data-close-modal="confirmModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmModalMessage">Bạn có chắc chắn muốn xóa mục này không? Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close-modal="confirmModal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirmModalActionBtn">Đồng ý xóa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Load App Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
